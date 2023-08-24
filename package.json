@@ -1,0 +1,23 @@
+{
+  "name": "naturewallpaper",
+  "version": "1.0.0",
+  "description": "wallpaper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lexm2/Wallpaper.git"
+  },
+  "author": "Lex",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lexm2/Wallpaper/issues"
+  },
+  "homepage": "https://github.com/lexm2/Wallpaper#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "pexels": "^1.4.0"
+  }
+}
