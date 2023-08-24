@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lexm2/Wallpaper.git"
+    "url": "git+https://github.com/lexm2/NatureWallpaper.git"
   },
   "author": "Lex",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/lexm2/Wallpaper/issues"
+    "url": "https://github.com/lexm2/NatureWallpaper/issues"
   },
-  "homepage": "https://github.com/lexm2/Wallpaper#readme",
+  "homepage": "https://github.com/lexm2/NatureWallpaper#readme",
   "dependencies": {
     "express": "^4.18.2",
     "pexels": "^1.4.0"
