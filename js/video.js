@@ -4,7 +4,7 @@ const viewportWidth = window.innerWidth;
 const viewportHeight = window.innerHeight;
 
 let page =
-  "https://api.pexels.com/v1/videos/search/?page=1&per_page=15&query=Nature Drone Footage&orientation=landscape";
+  "https://api.pexels.com/v1/videos/search/?page=1&per_page=80&query=Nature Drone Footage&orientation=landscape";
 let currentGifIndex = 0;
 let currentVideoIndex = 0;
 let vidIndex = 0;
