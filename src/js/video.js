@@ -1,11 +1,29 @@
 // script.js
+const apiKey = "6fobEFX4FuOFIpuNpk5RNUBFffdoOU0BV8qozv6KxZBAfPI74GEgE1xD"; //dont touch this ever if you are not lex (super high security comment to prevent hackers)
+const viewportWidth = window.innerWidth;
+const viewportHeight = window.innerHeight;
+
+let page =
+  "https://api.pexels.com/v1/videos/search/?page=1&per_page=15&query=Drone Footage&orientation=landscape";
 let currentGifIndex = 0;
 let currentVideoIndex = 0;
+let vidIndex = 0;
 let video = document.getElementById("video");
-const videoNumber = 11;
+let returnData = null;
+
 window.addEventListener("resize", resizeVideo);
 
 init();
+
+async function init() {
+  try {
+    returnData = await fetchFromAPI();
+  } catch (error) {
+    console.error("Error in init:", error);
+  }
+  resizeVideo();
+  onAnimationEnd();
+}
 
 function resizeVideo() {
   const viewportWidth = window.innerWidth;
@@ -20,43 +38,83 @@ function resizeVideo() {
   }
 }
 
-function init() {
-  resizeVideo();
-  onAnimationEnd();
-}
-
-function nextVideo() {
-  // Listen for the end of the fade-out animation
-  video.addEventListener("animationend", onAnimationEnd);
-}
-
-function onAnimationEnd() {
+async function onAnimationEnd() {
   video.removeEventListener("animationend", onAnimationEnd);
 
   // Load the next random video
-  const newVideoSource = getVideoSource();
-  video.src = newVideoSource;
-  video.load();
-  video.play();
-  video.style.animation = "fadeIn 1s ease-in-out forwards";
-  video.addEventListener(
-    "loadedmetadata",
-    () => {
-      setTimeout(() => {
-        video.addEventListener("animationend", onAnimationEnd);
-        video.style.animation = "fadeOut 1s ease-in-out";
-      }, (video.duration - 2) * 1000);
-    },
-    { once: true }
-  );
+  if (returnData) {
+    const newVideoSource = await getVideoSource();
+    video.src = newVideoSource;
+    video.load();
+    video.play();
+    video.style.animation = "fadeIn 1s ease-in-out forwards";
+    video.addEventListener(
+      "loadedmetadata",
+      () => {
+        setTimeout(() => {
+          video.addEventListener("animationend", onAnimationEnd);
+          video.style.animation = "fadeOut 1s ease-in-out forwards";
+        }, (video.duration - 1) * 1000);
+      },
+      { once: true }
+    );
+  }
 }
 
+async function getVideoSource() {
+  let highRes = 0;
+  let highResVideo = null;
 
-function getVideoSource() {
-  const randomVideoNumber = getRandomVideoNumber();
-  return `videos/${randomVideoNumber}.mp4`;
+  if (vidIndex % returnData.videos.length === 0) {
+    returnData = await fetchFromAPI();
+  }
+
+  const currentVid = returnData.videos[vidIndex];
+
+  currentVid.video_files.every((video) => {
+    const videoWidth = video.width;
+    const videoHeight = video.height;
+    const videoResolution = videoWidth * videoHeight;
+
+    if (videoResolution > highRes) {
+      if (videoResolution > 3456 * 2234) {
+        if (highResVideo == null) {
+            highResVideo = video;
+        }
+        return false;
+    }
+      highRes = videoResolution;
+      highResVideo = video;
+    }
+    return true;
+  });
+  try {
+    console.log(highResVideo.link);
+  }
+  catch {
+    console.log(currentVid);
+  }
+  
+  return highResVideo.link;
 }
 
-function getRandomVideoNumber() {
-  return Math.floor(Math.random() * videoNumber) + 1;
+async function fetchFromAPI() {
+  try {
+    const response = await fetch(page, {
+      headers: {
+        Authorization: apiKey,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Request failed");
+    }
+
+    const data = await response.json();
+    page = data.next_page;
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
 }
